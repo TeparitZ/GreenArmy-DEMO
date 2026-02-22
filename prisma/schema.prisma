@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+
+  events       Event[]
+  participants Participant[]
+  donations    Donation[]
+  activities   ActivityPost[]
+}
+
+model Event {
+  id               String      @id @default(cuid())
+  title            String
+  description      String
+  date             DateTime
+  address          String
+  lat              Float
+  lng              Float
+  imageUrl         String
+  status           EventStatus @default(UPCOMING)
+  acceptDonations  Boolean     @default(false)
+  acceptVolunteers Boolean     @default(true)
+  totalTrees       Int         @default(0)
+  organizerId      String
+  organizer        User        @relation(fields: [organizerId], references: [id])
+  createdAt        DateTime    @default(now())
+
+  participants Participant[]
+  donations    Donation[]
+  activities   ActivityPost[]
+}
+
+model Participant {
+  id       String   @id @default(cuid())
+  userId   String
+  eventId  String
+  joinedAt DateTime @default(now())
+  user     User     @relation(fields: [userId], references: [id])
+  event    Event    @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+}
+
+model Donation {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  amount    Float
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+}
+
+model ActivityPost {
+  id           String   @id @default(cuid())
+  eventId      String
+  authorId     String
+  description  String
+  imageUrl     String?
+  treesPlanted Int      @default(0)
+  createdAt    DateTime @default(now())
+  event        Event    @relation(fields: [eventId], references: [id])
+  author       User     @relation(fields: [authorId], references: [id])
+}
