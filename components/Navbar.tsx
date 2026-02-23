@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Menu, X, Leaf, LogOut, LogIn, UserPlus, Info, Phone } from 'lucide-react';
+import { Menu, X, Leaf, LogOut, LogIn, UserPlus, Info, Phone, Trophy } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -49,6 +49,18 @@ export default function Navbar() {
             {navLink('/', 'หน้าแรก')}
             {navLink('/about', 'เกี่ยวกับเรา')}
             {navLink('/contact', 'ติดต่อเรา')}
+            <Link
+              href="/rank"
+              onClick={() => setMenuOpen(false)}
+              className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                pathname === '/rank'
+                  ? 'text-green-600'
+                  : 'text-gray-600 hover:text-green-600'
+              }`}
+            >
+              <Trophy size={14} />
+              กระดานผู้นำ
+            </Link>
             {user && navLink('/events/create', 'สร้างกิจกรรม')}
             {user && navLink('/profile', 'โปรไฟล์ของฉัน')}
           </div>
@@ -110,6 +122,10 @@ export default function Navbar() {
           <div className="flex items-center gap-1.5">
             <Phone size={14} className="text-gray-400" />
             {navLink('/contact', 'ติดต่อเรา')}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Trophy size={14} className="text-gray-400" />
+            {navLink('/rank', 'กระดานผู้นำ')}
           </div>
           {user && (
             <>

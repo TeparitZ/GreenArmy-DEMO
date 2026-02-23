@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Kanit } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/Providers';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const kanit = Kanit({
+  variable: '--font-kanit',
+  subsets: ['thai', 'latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="th">
-      <body className={`${geistSans.variable} antialiased min-h-screen bg-gray-50`}>
+      <body className={`${kanit.variable} antialiased min-h-screen bg-gray-50`}>
         <Providers>
           <Navbar />
           <main>{children}</main>
